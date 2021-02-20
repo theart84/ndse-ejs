@@ -6,15 +6,18 @@ const loggerMiddleware = require('./middleware/logger');
 const errorMiddleware = require('.//middleware/error');
 const store = require('./store/store');
 const booksRouter = require('./routes/books');
+const booksRouterAPI = require('./routes/booksAPI');
 
 const app = express();
-store.createDB();
+// store.createDB();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
+app.set('view engine', 'ejs');
 app.use(loggerMiddleware);
+app.use('/api', booksRouterAPI);
 app.use('/', booksRouter);
 app.use(errorMiddleware);
 

@@ -5,10 +5,9 @@ const path = require('path');
 class BooksController {
   async getBooks(req, res) {
     const data = await store.readFromDB();
-    res.status(200).json({
-      success: true,
-      quantity: data.length,
-      data,
+    res.render('index', {
+      title: 'Главная',
+      books: data,
     });
   }
 
@@ -17,29 +16,55 @@ class BooksController {
     const db = await store.readFromDB();
     const book = db.find((item) => item.id === id);
     if (book) {
-      res.status(200).json({
-        success: true,
-        data: book,
+      res.render('view', {
+        title: 'Главная',
+        book,
       });
     } else {
-      res.status(404).json({
-        success: false,
-        message: 'Book not found',
-      });
+      res.status(404).redirect('error/404');
     }
   }
 
-  async createBook(req, res) {
-    const { title, description, authors, favorite, fileCover, fileName } = req.body;
-    const book = new Book(title, description, authors, favorite, fileCover, fileName);
-    await store.writeInDB(book);
-    res.status(201).json({
-      success: true,
-      data: book,
+  createBookGet(req, res) {
+    res.render('create', {
+      title: 'Главная',
+      book: [],
     });
   }
 
-  async updateBook(req, res) {
+  async createBookPost(req, res) {
+    const db = await store.readFromDB();
+    const { title, description, authors, favorite, fileCover, fileName } = req.body;
+    let fileBook = '';
+    if (req.file) {
+      fileBook = req.file.path;
+    }
+    const book = new Book(title, description, authors, favorite, fileCover, fileName, fileBook);
+    // let fixedPathFile = fileBook.replace(/undefined/, book.id)
+    // console.log(fixedPathFile);
+    await store.writeInDB(book);
+    res.render('index', {
+      title: 'Главная',
+      books: db,
+    });
+  }
+
+  async updateBookGet(req, res) {
+    const { title, description, authors, favorite, fileCover, fileName } = req.body;
+    const { id } = req.params;
+    const db = await store.readFromDB();
+    const updateBookIndex = db.findIndex((item) => item.id === id);
+    if (updateBookIndex !== -1) {
+      res.render('update', {
+        title: db[updateBookIndex].title,
+        book: db[updateBookIndex],
+      });
+    } else {
+      res.status(404).redirect('error/404');
+    }
+  }
+
+  async updateBookPost(req, res) {
     const { title, description, authors, favorite, fileCover, fileName } = req.body;
     const { id } = req.params;
     const db = await store.readFromDB();
@@ -57,15 +82,12 @@ class BooksController {
       };
       db.splice(updateBookIndex, 1);
       store.writeInDB(updateBook);
-      res.status(200).json({
-        success: true,
-        data: updateBook,
+      res.render('view', {
+        title: 'Главная',
+        book: db[db.findIndex((item) => item.id === id)],
       });
     } else {
-      res.status(404).json({
-        success: false,
-        message: 'Book not found',
-      });
+      res.status(404).redirect('error/404');
     }
   }
 
@@ -76,66 +98,63 @@ class BooksController {
     if (deleteBookIndex !== -1) {
       db.splice(deleteBookIndex, 1);
       store.deleteFromDB(db);
-      res.status(200).json({
-        success: true,
+      res.render('index', {
+        title: 'Главная',
+        books: db,
       });
-      // store.writeDB();
     } else {
-      res.status(404).json({
-        success: false,
-        message: 'Book not found',
-      });
+      res.status(404).redirect('error/404');
     }
   }
 
-  async uploadCover(req, res) {
-    const { id } = req.params;
-    const db = await store.readFromDB();
-    const findBookIndex = db.findIndex((item) => item.id === id);
-    if (findBookIndex !== -1) {
-      if (req.file) {
-        const { path } = req.file;
-        const updateBook = {
-          ...db[findBookIndex],
-          fileBook: path,
-        };
-        db.splice(findBookIndex, 1);
-        store.writeInDB(updateBook);
-        res.status(200).json({
-          success: true,
-          path,
-        });
-      } else {
-        res.json({
-          success: false,
-          path: null,
-        });
-      }
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'Book not found',
-      });
-    }
-  }
+  // async uploadCover(req, res) {
+  //   const { id } = req.params;
+  //   const db = await store.readFromDB();
+  //   const findBookIndex = db.findIndex((item) => item.id === id);
+  //   if (findBookIndex !== -1) {
+  //     if (req.file) {
+  //       const { path } = req.file;
+  //       const updateBook = {
+  //         ...db[findBookIndex],
+  //         fileBook: path,
+  //       };
+  //       db.splice(findBookIndex, 1);
+  //       store.writeInDB(updateBook);
+  //       res.status(200).json({
+  //         success: true,
+  //         path,
+  //       });
+  //     } else {
+  //       res.json({
+  //         success: false,
+  //         path: null,
+  //       });
+  //     }
+  //   } else {
+  //     res.status(404).json({
+  //       success: false,
+  //       message: 'Book not found',
+  //     });
+  //   }
+  // }
 
-  async downloadCover(req, res) {
-    const { id } = req.params;
-    const db = await store.readFromDB();
-    const book = db.find((item) => item.id === id);
-    if (book) {
-      res.download(book.fileBook, `${book.title}${path.extname(book.fileBook)}`, (err) => {
-        if (err) {
-          res.status(404).json();
-        }
-      });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'Book not found',
-      });
-    }
-  }
+  // async downloadCover(req, res) {
+  //   const { id } = req.params;
+  //   const db = await store.readFromDB();
+  //   const book = db.find((item) => item.id === id);
+  //   if (book) {
+  //     res.download(book.fileBook, `${book.title}${path.extname(book.fileBook)}`, (err) => {
+  //       if (err) {
+  //         res.status(404).json();
+  //       }
+  //     });
+  //   } else {
+  //     res.status(404).json({
+  //       success: false,
+  //       message: 'Book not found',
+  //     });
+  //   }
+  // }
 }
 
 module.exports = new BooksController();

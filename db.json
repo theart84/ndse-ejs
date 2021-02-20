@@ -1,0 +1,52 @@
+[
+  {
+    "id": "16138231579206345024004af72a93",
+    "title": "1984",
+    "description": "Антиутопия",
+    "authors": "Джордж Оруэлл",
+    "favorite": "awesome",
+    "fileCover": "undecover",
+    "fileName": "1984.txt",
+    "fileBook": "public\\books\\2021-02-20T13-54-09.942Z-16138231579206345024004af72a93-1984.txt"
+  },
+  {
+    "id": "1613823155830544438000c3054f05",
+    "title": "Стив Джобс",
+    "description": "Биография",
+    "authors": "Уолтер Айзексон",
+    "favorite": "super",
+    "fileCover": "undecover",
+    "fileName": "stevejobs.txt",
+    "fileBook": "public\\books\\2021-02-20T16-00-32.103Z-1613823155830544438000c3054f05-stevejobs.txt"
+  },
+  {
+    "id": "161382315724996348900076ecec72",
+    "title": "Война и мир",
+    "description": "Роман",
+    "authors": "Лев Толстой",
+    "favorite": "cool",
+    "fileCover": "undecover",
+    "fileName": "warandpeace.txt",
+    "fileBook": "public\\books\\2021-02-20T13-53-47.048Z-161382315724996348900076ecec72-warandpeace.txt"
+  },
+  {
+    "id": "1613842497999713741200d937f399",
+    "title": "Унесенный волной",
+    "description": "триллер",
+    "authors": "Акакий Пишущий",
+    "favorite": "омагад",
+    "fileCover": "пока недоступно",
+    "fileName": "carriedawaybythewave.txt",
+    "fileBook": "public\\books\\2021-02-20T17-34-57.977Z-undefined-carriedawaybythewave.txt"
+  },
+  {
+    "id": "16138426235372517126007e8c1c9a",
+    "title": "Летаю за облаками",
+    "description": "роман",
+    "authors": "Василиса Прекрасная",
+    "favorite": "норм",
+    "fileCover": "пока недоступно",
+    "fileName": "Iflybehindtheclouds.txt",
+    "fileBook": "public\\books\\2021-02-20T17-37-03.523Z-undefined-Iflybehindtheclouds.txt"
+  }
+]
