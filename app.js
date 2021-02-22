@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const loggerMiddleware = require('./middleware/logger');
 const errorMiddleware = require('.//middleware/error');
@@ -14,7 +13,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(morgan('dev'));
 app.set('view engine', 'ejs');
 app.use(loggerMiddleware);
 app.use('/api', booksRouterAPI);
