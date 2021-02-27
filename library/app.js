@@ -9,7 +9,6 @@ const booksRouterAPI = require('./routes/booksAPI');
 
 const app = express();
 // store.createDB();
-
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

@@ -1,13 +1,15 @@
 const Book = require('../models/Book');
 const store = require('../store/store');
-const path = require('path');
+
+const { updateCounter, readCounter } = require('../helpers/utils');
 
 class BooksController {
   async getBooks(req, res) {
     const data = await store.readFromDB();
+    const injectCounterInData = await Promise.all(data.map(async (book) => ({ ...book, counter: await readCounter(book.id)})));
     res.render('index', {
       title: 'Главная',
-      books: data,
+      books: injectCounterInData,
     });
   }
 
@@ -15,10 +17,14 @@ class BooksController {
     const { id } = req.params;
     const db = await store.readFromDB();
     const book = db.find((item) => item.id === id);
+    const counter = await updateCounter(id);
     if (book) {
       res.render('view', {
         title: 'Главная',
-        book,
+        book: {
+          ...book,
+          counter 
+        }
       });
     } else {
       res.status(404).redirect('error/404');

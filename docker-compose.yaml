@@ -1,0 +1,16 @@
+version: "3.8"
+services:   
+  counters:
+    image: counter
+    command: node index.js
+  library:
+    image: library
+    ports: 
+      - 80:3000
+    environment: 
+      - ADDRESS=counters
+    command: node index.js
+    depends_on: 
+      - counters
+   
+  

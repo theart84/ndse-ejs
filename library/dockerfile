@@ -1,0 +1,19 @@
+FROM mhart/alpine-node
+
+WORKDIR /APP
+
+COPY controllers ./controllers
+COPY helpers ./helpers
+COPY middleware ./middleware
+COPY models ./models
+COPY public ./public
+COPY routes ./routes
+COPY store ./store
+COPY views ./views
+COPY *.js ./
+COPY db.json ./
+COPY package.json ./
+
+RUN npm install
+
+CMD [ "node", "index.js" ]
